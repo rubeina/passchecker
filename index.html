@@ -4,164 +4,168 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SecurePass Strength Checker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Raleway:wght@400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="icon" href="🔐" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
-    body {
+    :root {
+      --accent: #00e0ff;
+      --text-light: #f1f1f1;
+      --weak: #ff4d4f;
+      --medium: #ffa940;
+      --strong: #52c41a;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Raleway', sans-serif;
-      background: url('background.png') no-repeat center center fixed;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #0f2027),
+                  url('background.png') no-repeat center center fixed;
       background-size: cover;
-      color: #ffffff;
+      background-blend-mode: overlay;
+      animation: gradient 20s ease infinite;
+      overflow: hidden;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 40px 30px;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(14px);
       text-align: center;
-      position: relative;
-      min-height: 100vh;
-    }
-
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.75);
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      z-index: 0;
-    }
-
-    .container {
-      position: relative;
-      z-index: 2;
-      padding-top: 80px;
-      padding-left: 20px;
-      padding-right: 20px;
-      min-height: 100vh;
-      box-sizing: border-box;
     }
 
     h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 36px;
+      color: var(--accent);
+      font-size: 24px;
       margin-bottom: 10px;
-      color: #00ffff;
-      text-shadow: 1px 1px 3px #000;
     }
 
     p.description {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 18px;
-      max-width: 600px;
-      margin: 0 auto 30px;
-      color: #eeeeee;
+      font-size: 15px;
+      color: #ccc;
+      margin-bottom: 30px;
     }
 
-    input {
+    input[type="password"] {
+      width: 100%;
       padding: 12px;
-      width: 300px;
       font-size: 16px;
       border: none;
       border-radius: 8px;
-      margin-top: 20px;
+      margin-bottom: 15px;
+      background: #1e1e1e;
+      color: #fff;
       outline: none;
-      box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
-      background-color: #111;
-      color: #ffffff;
-      font-family: 'Raleway', sans-serif;
     }
 
-    #strength {
-      margin-top: 20px;
-      font-size: 20px;
+    .strength-bar {
+      width: 100%;
+      height: 8px;
+      background: #333;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .strength-bar .fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .strength-text {
       font-weight: bold;
-      text-shadow: 1px 1px 2px black;
-      font-family: 'Share Tech Mono', monospace;
+      margin-bottom: 20px;
     }
 
     .suggestions {
       display: none;
-      margin-top: 30px;
+      margin-top: 20px;
     }
 
     .suggestions h3 {
-      font-family: 'Pacifico', cursive;
-      font-size: 22px;
-      color: #ffccff;
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #eee;
     }
 
     .suggestions button {
       margin: 5px;
-      padding: 10px 15px;
-      background-color: #222;
-      color: #00ffff;
-      border: 1px solid #00ffff;
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
       border-radius: 6px;
       cursor: pointer;
-      font-family: 'Share Tech Mono', monospace;
-      transition: background-color 0.3s, color 0.3s;
+      transition: 0.3s;
     }
 
     .suggestions button:hover {
-      background-color: #00ffff;
+      background: var(--accent);
       color: #000;
     }
 
     .footer {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
-      font-size: 14px;
+      font-size: 13px;
       color: #aaa;
-      text-shadow: 1px 1px 2px #000;
-      font-family: 'Raleway', sans-serif;
-      display: flex;
-      justify-content: center;
-      gap: 5px;
-      user-select: none;
-      z-index: 3;
+      margin-top: 30px;
     }
 
-    .footer .name {
-      font-weight: 700;
-      color: #00ffff;
+    .footer strong {
+      color: var(--accent);
+      font-weight: 600;
     }
 
     @media (max-width: 500px) {
-      h1 {
-        font-size: 28px;
-      }
-
-      p.description {
-        font-size: 16px;
-      }
-
-      input {
-        width: 90%;
+      .card {
+        padding: 30px 20px;
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="overlay"></div>
-
-  <div class="container">
-    <h1>🔐 SecurePass Strength Checker</h1>
-    <p class="description">
-      Test the strength of your password in real-time. If it's weak, get safe suggestions instantly!
-    </p>
+  <div class="card">
+    <h1>🔐 SecurePass</h1>
+    <p class="description">Check your password strength and get secure suggestions instantly.</p>
 
     <input type="password" id="password" placeholder="Enter your password..." onkeyup="checkStrength()" />
-    <div id="strength"></div>
+
+    <div class="strength-bar">
+      <div class="fill" id="bar-fill"></div>
+    </div>
+
+    <div class="strength-text" id="strength-text">Waiting for input...</div>
 
     <div class="suggestions" id="suggestions-box">
       <h3>🔒 Try These Secure Suggestions:</h3>
       <div id="suggestion-buttons"></div>
     </div>
-  </div>
 
-  <div class="footer">
-    <span>Designed by</span>
-    <strong class="name">RUBEINA 💚</strong>
-    <span>| © 2025 SecurePass</span>
+    <div class="footer">
+      Designed by <strong>RUBEINA 💚</strong> | © 2025 SecurePass
+    </div>
   </div>
 
   <script>
@@ -177,28 +181,35 @@
       const input = document.getElementById("password");
       if (!password) password = input.value;
 
-      const strengthText = document.getElementById("strength");
-      const suggestionBox = document.getElementById("suggestions-box");
-      let strength = 0;
+      const bar = document.getElementById("bar-fill");
+      const text = document.getElementById("strength-text");
+      const box = document.getElementById("suggestions-box");
 
+      let strength = 0;
       if (password.length >= 8) strength++;
       if (/[a-z]/.test(password)) strength++;
       if (/[A-Z]/.test(password)) strength++;
       if (/[0-9]/.test(password)) strength++;
       if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
 
+      let width = strength * 20;
+      bar.style.width = width + "%";
+
       if (strength <= 2) {
-        strengthText.textContent = "🔴 Weak Password";
-        strengthText.style.color = "red";
-        suggestionBox.style.display = "block";
+        bar.style.background = "var(--weak)";
+        text.textContent = "🔴 Weak Password";
+        text.style.color = "var(--weak)";
+        box.style.display = "block";
       } else if (strength === 3 || strength === 4) {
-        strengthText.textContent = "🟠 Moderate Password";
-        strengthText.style.color = "orange";
-        suggestionBox.style.display = "none";
+        bar.style.background = "var(--medium)";
+        text.textContent = "🟠 Moderate Password";
+        text.style.color = "var(--medium)";
+        box.style.display = "none";
       } else {
-        strengthText.textContent = "🟢 Strong Password";
-        strengthText.style.color = "lime";
-        suggestionBox.style.display = "none";
+        bar.style.background = "var(--strong)";
+        text.textContent = "🟢 Strong Password";
+        text.style.color = "var(--strong)";
+        box.style.display = "none";
       }
     }
 
@@ -207,9 +218,11 @@
       suggestions.forEach(pwd => {
         const btn = document.createElement("button");
         btn.textContent = pwd;
+        btn.title = "Click to use and copy";
         btn.onclick = () => {
           document.getElementById("password").value = pwd;
           checkStrength(pwd);
+          navigator.clipboard.writeText(pwd);
         };
         container.appendChild(btn);
       });
